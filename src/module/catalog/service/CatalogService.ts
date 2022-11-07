@@ -16,4 +16,8 @@ export class CatalogService {
 
     return this.catalogRepository.save(catalogToCreate);
   }
+
+  async delete(catalog: DocumentType<Catalog>): Promise<void> {
+    return this.catalogRepository.delete(catalog);
+  }
 }

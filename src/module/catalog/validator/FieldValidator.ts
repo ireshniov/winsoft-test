@@ -29,6 +29,8 @@ export class FieldValidator {
         return {
           isDate: `${name} should be a date. Please enter a valid ${name}`,
         };
+      default:
+        throw new Error(`Unknown field type ${type}`);
     }
   }
 }

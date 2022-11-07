@@ -12,6 +12,12 @@ import { CatalogByUuidPipe } from './pipe/CatalogByUuidPipe';
 import { CatalogService } from './service/CatalogService';
 import { CatalogValidationPipe } from './pipe/CatalogValidationPipe';
 import { Catalog } from './model/Catalog';
+import { SchemaOptions } from 'mongoose';
+
+const schemaOptions: SchemaOptions = {
+  autoCreate: process.env.NODE_ENV === 'development',
+  autoIndex: process.env.NODE_ENV === 'development',
+};
 
 export const catalogModuleMetadata: ModuleMetadata = {
   imports: [
@@ -22,17 +28,11 @@ export const catalogModuleMetadata: ModuleMetadata = {
     MongooseModule.forFeature([
       {
         name: CatalogTemplate.name,
-        schema: buildSchema(CatalogTemplate, {
-          autoCreate: process.env.NODE_ENV === 'development',
-          autoIndex: process.env.NODE_ENV === 'development',
-        }),
+        schema: buildSchema(CatalogTemplate, schemaOptions),
       },
       {
         name: Catalog.name,
-        schema: buildSchema(Catalog, {
-          autoCreate: process.env.NODE_ENV === 'development',
-          autoIndex: process.env.NODE_ENV === 'development',
-        }),
+        schema: buildSchema(Catalog, schemaOptions),
       },
     ]),
   ],
