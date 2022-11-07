@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "outDir": "dist/eslint"
+    },
+    "include": ["./**/**.ts", "./**/**.tsx", "./**/**.js", "./**/**.json"]
+}

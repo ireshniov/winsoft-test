@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+  winsoft-app:
+    container_name: winsoft-app
+    hostname: winsoft-app
+    ports:
+      - '3000:3000'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - ./:/winsoft-app
+    entrypoint: npm
+    command: 'run start:ts:watch'
+    env_file: ./.env
+    depends_on:
+      - mongodb
+
+  mongodb:
+    container_name: mongodb
+    hostname: mongodb
+    image: mongo:4.2
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./.data/mongodb:/data/db
+      - ./.logs/mongodb:/var/log/mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_USERNAME: dev
+      MONGO_PASSWORD: secret
+      MONGO_HOST: mongodb
+      MONGO_USER: dev
+      MONGO_PASS: secret
+      MONGO_DB_NAME: winsoft-db
+      MONGO_AUTH_MECHANISM: SCRAM-SHA-1
+      WAIT_HOSTS: mongodb:27017
+      WAIT_HOSTS_TIMEOUT: 120
