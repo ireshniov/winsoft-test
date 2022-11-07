@@ -1,32 +1,51 @@
 import { index, ModelOptions, pre, prop } from '@typegoose/typegoose';
 import { v4 as uuidv4 } from 'uuid';
+import { DocumentStatusEnum } from '../interface/DocumentStatusEnum';
 import { FieldEnum } from '../interface/FieldEnum';
 
 @ModelOptions({ schemaOptions: { _id: false } })
-export class CatalogTemplateField {
+export class CatalogField {
   @prop({ type: () => String, required: true })
   name: string;
 
   @prop({ type: () => String, enum: FieldEnum, required: true })
   type: FieldEnum;
+
+  @prop({ type: () => String })
+  value: string;
 }
 
+@pre<CatalogDocument>('validate', function (this: CatalogDocument, next) {
+  this.uuid = this.uuid ?? uuidv4();
+  next();
+})
 @ModelOptions({ schemaOptions: { _id: false } })
-export class CatalogTemplateDocument {
+export class CatalogDocument {
   @prop({ type: () => String, required: true })
   name: string;
 
-  @prop({ type: () => [CatalogTemplateField], required: true })
-  fields: CatalogTemplateField[];
+  @prop({ type: () => [CatalogField], required: true })
+  fields: CatalogField[];
+
+  @prop({ type: () => String, required: true })
+  uuid: string;
+
+  @prop({
+    type: () => String,
+    enum: DocumentStatusEnum,
+    required: true,
+    default: DocumentStatusEnum.PENDING,
+  })
+  status: DocumentStatusEnum;
 }
 
-@pre<CatalogTemplate>('validate', function (this: CatalogTemplate, next) {
+@pre<Catalog>('validate', function (this: Catalog, next) {
   this.uuid = this.uuid ?? uuidv4();
   next();
 })
 @ModelOptions({
   schemaOptions: {
-    collection: 'catalog-templates',
+    collection: 'catalogs',
     versionKey: false,
     timestamps: false,
     toJSON: {
@@ -44,13 +63,13 @@ export class CatalogTemplateDocument {
     background: true,
   },
 )
-export class CatalogTemplate {
+export class Catalog {
   @prop({ type: () => String, required: true })
   uuid: string;
 
   @prop({ type: () => String, required: true })
   name: string;
 
-  @prop({ type: () => [CatalogTemplateDocument], required: true })
-  documents: CatalogTemplateDocument[];
+  @prop({ type: () => [CatalogDocument], required: true })
+  documents: CatalogDocument[];
 }

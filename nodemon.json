@@ -7,5 +7,6 @@
     "tsconfig.json"
   ],
   "ext": "js,ts",
-  "exec": "npm run start:ts"
+  "exec": "npm run start:ts",
+  "delay": 5000
 }

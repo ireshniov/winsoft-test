@@ -1,19 +1,25 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsEnum,
   IsNotEmpty,
   IsString,
-  IsUUID,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { FieldEnum } from '../interface/FieldEnum';
 
 export class CreateCatalogFieldDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
+  @IsEnum(FieldEnum)
+  @IsNotEmpty()
+  type: FieldEnum;
+
   @IsString()
+  @IsNotEmpty()
   value: string;
 }
 
@@ -31,9 +37,9 @@ export class CreateCatalogDocumentDto {
 }
 
 export class CreateCatalogDto {
-  @IsUUID(4)
+  @IsString()
   @IsNotEmpty()
-  catalogTemplateUuid: string;
+  name: string;
 
   @IsArray()
   @IsNotEmpty()

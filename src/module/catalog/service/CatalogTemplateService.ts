@@ -15,7 +15,15 @@ export class CatalogTemplateService {
   async create(
     catalogTemplate: CreateCatalogTemplateDto,
   ): Promise<DocumentType<CatalogTemplate>> {
-    return this.catalogTemplateRepository.save({ ...catalogTemplate });
+    const catalogTemplateToCreate: CatalogTemplate = plainToInstance(
+      CatalogTemplate,
+      catalogTemplate,
+      {
+        ignoreDecorators: true,
+      },
+    );
+
+    return this.catalogTemplateRepository.save(catalogTemplateToCreate);
   }
 
   async update(
