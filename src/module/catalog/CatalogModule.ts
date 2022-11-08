@@ -13,6 +13,7 @@ import { CatalogService } from './service/CatalogService';
 import { CatalogValidationPipe } from './pipe/CatalogValidationPipe';
 import { Catalog } from './model/Catalog';
 import { SchemaOptions } from 'mongoose';
+import { AuthModule } from '../auth/AuthModule';
 
 const schemaOptions: SchemaOptions = {
   autoCreate: process.env.NODE_ENV === 'development',
@@ -21,6 +22,7 @@ const schemaOptions: SchemaOptions = {
 
 export const catalogModuleMetadata: ModuleMetadata = {
   imports: [
+    AuthModule,
     MongooseModule.forRoot(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
