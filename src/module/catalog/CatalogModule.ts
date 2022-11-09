@@ -14,6 +14,7 @@ import { CatalogValidationPipe } from './pipe/CatalogValidationPipe';
 import { Catalog } from './model/Catalog';
 import { SchemaOptions } from 'mongoose';
 import { AuthModule } from '../auth/AuthModule';
+import { CatalogOwnershipGuard } from './guard/CatalogOwnershipGuard';
 
 const schemaOptions: SchemaOptions = {
   autoCreate: process.env.NODE_ENV === 'development',
@@ -40,6 +41,7 @@ export const catalogModuleMetadata: ModuleMetadata = {
   ],
   controllers: [CatalogTemplateController, CatalogController],
   providers: [
+    CatalogOwnershipGuard,
     CatalogTemplateRepository,
     CatalogRepository,
     CatalogTemplateByUuidPipe,

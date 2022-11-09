@@ -70,6 +70,9 @@ export class Catalog {
   @prop({ type: () => String, required: true })
   name: string;
 
+  @prop({ type: () => String, required: true })
+  userId: string;
+
   @prop({ type: () => [CatalogDocument], required: true })
   documents: CatalogDocument[];
 }

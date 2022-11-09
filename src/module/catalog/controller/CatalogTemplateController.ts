@@ -18,6 +18,9 @@ import { CatalogTemplateByUuidPipe } from '../pipe/CatalogTemplateByUuidPipe';
 import { DocumentType } from '@typegoose/typegoose';
 import { UpdateCatalogTemplateDto } from '../dto/UpdateCatalogTemplateDto';
 import { AuthGuard } from '@nestjs/passport';
+import { Permissions } from '../../auth/decorator/Permissions';
+import { PermissionsGuard } from '../../auth/guard/PermissionsGuard';
+import { PermissionEnum } from '../interface/PermissionEnum';
 
 @Controller('catalog-templates')
 export class CatalogTemplateController {
@@ -25,8 +28,9 @@ export class CatalogTemplateController {
     private readonly catalogTemplateService: CatalogTemplateService,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Get(':uuid')
+  @Permissions(PermissionEnum.READ_CATALOG_TEMPLATE)
   @HttpCode(HttpStatus.OK)
   async get(
     @Param('uuid', CatalogTemplateByUuidPipe)
@@ -35,8 +39,9 @@ export class CatalogTemplateController {
     return catalogTemplate;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Post()
+  @Permissions(PermissionEnum.CREATE_CATALOG_TEMPLATE)
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body(getValidationPipeOf(CreateCatalogTemplateDto))
@@ -45,8 +50,9 @@ export class CatalogTemplateController {
     return this.catalogTemplateService.create(dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Put(':uuid')
+  @Permissions(PermissionEnum.UPDATE_CATALOG_TEMPLATE)
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('uuid', CatalogTemplateByUuidPipe)
@@ -57,8 +63,9 @@ export class CatalogTemplateController {
     return this.catalogTemplateService.update(catalogTemplate, dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Delete(':uuid')
+  @Permissions(PermissionEnum.DELETE_CATALOG_TEMPLATE)
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
     @Param('uuid', CatalogTemplateByUuidPipe)

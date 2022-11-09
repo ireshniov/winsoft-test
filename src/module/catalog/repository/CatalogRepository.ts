@@ -14,6 +14,10 @@ export class CatalogRepository {
     return this.model.findOne({ uuid });
   }
 
+  async isUserOwns(userId: string, uuid: string): Promise<boolean> {
+    return (await this.model.count({ userId, uuid })) === 1;
+  }
+
   async save(catalog: Partial<Catalog>): Promise<DocumentType<Catalog>> {
     const doc: DocumentType<Catalog> = new this.model(catalog);
     return await doc.save();

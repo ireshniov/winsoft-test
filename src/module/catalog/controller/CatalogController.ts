@@ -25,13 +25,19 @@ import {
 } from '../dto/VerificationCatalogDocumentDto';
 import { DocumentStatusEnum } from '../interface/DocumentStatusEnum';
 import * as _ from 'lodash';
+import { Permissions } from '../../auth/decorator/Permissions';
+import { PermissionsGuard } from '../../auth/guard/PermissionsGuard';
+import { PermissionEnum } from '../interface/PermissionEnum';
+import { CatalogOwnershipGuard } from '../guard/CatalogOwnershipGuard';
+import { UserId } from '../../auth/decorator/UserId';
 
 @Controller('catalogs')
 export class CatalogController {
   constructor(private readonly catalogService: CatalogService) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard, CatalogOwnershipGuard)
   @Get(':uuid')
+  @Permissions(PermissionEnum.READ_CATALOG)
   @HttpCode(HttpStatus.OK)
   async get(
     @Param('uuid', CatalogByUuidPipe)
@@ -40,18 +46,21 @@ export class CatalogController {
     return catalog;
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Post()
+  @Permissions(PermissionEnum.CREATE_CATALOG)
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body(getValidationPipeOf(CreateCatalogDto), CatalogValidationPipe)
     dto: CreateCatalogDto,
+    @UserId() userId: string,
   ): Promise<DocumentType<Catalog>> {
-    return this.catalogService.create(dto);
+    return this.catalogService.create(userId, dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Put(':uuid/verification')
+  @Permissions(PermissionEnum.VERIFICATION_CATALOG)
   @HttpCode(HttpStatus.OK)
   async verification(
     @Param('uuid', CatalogByUuidPipe) catalog: DocumentType<Catalog>,
@@ -71,8 +80,9 @@ export class CatalogController {
     return this.catalogService.verification(catalog, uuids);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard, CatalogOwnershipGuard)
   @Delete(':uuid')
+  @Permissions(PermissionEnum.DELETE_CATALOG)
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(
     @Param('uuid', CatalogByUuidPipe)

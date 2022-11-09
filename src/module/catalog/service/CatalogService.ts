@@ -10,10 +10,15 @@ import { DocumentStatusEnum } from '../interface/DocumentStatusEnum';
 export class CatalogService {
   constructor(private readonly catalogRepository: CatalogRepository) {}
 
-  async create(catalog: CreateCatalogDto): Promise<DocumentType<Catalog>> {
+  async create(
+    userId: string,
+    catalog: CreateCatalogDto,
+  ): Promise<DocumentType<Catalog>> {
     const catalogToCreate: Catalog = plainToInstance(Catalog, catalog, {
       ignoreDecorators: true,
     });
+
+    catalogToCreate.userId = userId;
 
     return this.catalogRepository.save(catalogToCreate);
   }
