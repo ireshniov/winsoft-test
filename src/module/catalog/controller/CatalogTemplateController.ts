@@ -53,7 +53,7 @@ export class CatalogTemplateController {
     catalogTemplate: DocumentType<CatalogTemplate>,
     @Body(getValidationPipeOf(UpdateCatalogTemplateDto))
     dto: UpdateCatalogTemplateDto,
-  ): Promise<CatalogTemplate> {
+  ): Promise<DocumentType<CatalogTemplate>> {
     return this.catalogTemplateService.update(catalogTemplate, dto);
   }
 
