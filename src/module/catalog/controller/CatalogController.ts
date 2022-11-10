@@ -67,15 +67,8 @@ export class CatalogController {
     @Body(getValidationPipeOf(VerificationCatalogDto))
     dto: VerificationCatalogDto,
   ): Promise<DocumentType<Catalog>> {
-    this.validateVerification(catalog, dto);
-
-    const uuids: Record<string, DocumentStatusEnum> = dto.documents.reduce(
-      (result: Record<string, DocumentStatusEnum>, { uuid, status }) => {
-        result[uuid] = status;
-        return result;
-      },
-      {},
-    );
+    const uuids: Record<string, DocumentStatusEnum> =
+      this.validateAndTransformVerificationCatalogDto(catalog, dto);
 
     return this.catalogService.verification(catalog, uuids);
   }
@@ -92,10 +85,10 @@ export class CatalogController {
   }
 
   // @todo move it somewhere in pipe (combine body and params in custom decorator)
-  private validateVerification(
+  private validateAndTransformVerificationCatalogDto(
     catalog: DocumentType<Catalog>,
     dto: VerificationCatalogDto,
-  ): void {
+  ): Record<string, DocumentStatusEnum> {
     const uuids: string[] = dto.documents.map(
       (value: VerificationCatalogDocumentDto) => value.uuid,
     );
@@ -113,5 +106,13 @@ export class CatalogController {
         }`,
       );
     }
+
+    return dto.documents.reduce(
+      (result: Record<string, DocumentStatusEnum>, { uuid, status }) => {
+        result[uuid] = status;
+        return result;
+      },
+      {},
+    );
   }
 }

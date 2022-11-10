@@ -96,3 +96,12 @@ curl --request POST 'https://winsoft-test.eu.auth0.com/oauth/token' \
 * Catalog create
 * Catalog delete
 * Catalog verification
+
+## Test
+
+```bash
+$ npm run test
+
+# test coverage
+$ npm run test:cov
+```
